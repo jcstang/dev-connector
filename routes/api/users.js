@@ -62,7 +62,11 @@ router.post('/', [
     user.password = await bcrypt.hash(password, salt);
 
     // ** SAVE the user **
-    await user.save();
+    try {
+      await user.save();
+    } catch (error) {
+      console.log(error.message);
+    }
 
     // return jsonwebtoken
     // payload to pass to sign func
