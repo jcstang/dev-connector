@@ -4,8 +4,8 @@
   "description": "Social network for developers",
   "main": "server.js",
   "scripts": {
-    "start": "node server",
-    "server": "nodemon server"
+    "start": "NODE_ENV=production node server",
+    "server": "NODE_ENV=development nodemon server"
   },
   "author": "Jacob Stanger",
   "license": "MIT",
