@@ -110,7 +110,7 @@ router.post(
 
       // 5. Save to db
       // =============================================================
-      await Profile.save();
+      await profile.save();
       res.json(profile);
     } catch (err) {
       console.error(err.message);
