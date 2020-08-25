@@ -1,28 +1,28 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const auth = require("../../middleware/auth");
-const { check, validationResult } = require("express-validator/check");
+const auth = require('../../middleware/auth');
+const { check, validationResult } = require('express-validator/check');
 
-const Profile = require("../../models/Profile");
-const User = require("../../models/User");
+const Profile = require('../../models/Profile');
+const User = require('../../models/User');
 
 // @route   GET api/profile/me
 // @desc    Get current users profile
 // @access  Private
-router.get("/me", auth, async (req, res) => {
+router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.user.id,
-    }).populate("user", ["name", "avatar"]);
+    }).populate('user', ['name', 'avatar']);
 
     if (!profile) {
-      return res.status(400).json({ msg: "There is no profile for this user" });
+      return res.status(400).json({ msg: 'There is no profile for this user' });
     }
 
     res.json(profile);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("server error");
+    res.status(500).send('server error');
   }
 });
 
@@ -30,12 +30,12 @@ router.get("/me", auth, async (req, res) => {
 // @desc    Create or update user profile.
 // @access  Private
 router.post(
-  "/",
+  '/',
   [
     auth,
     [
-      check("status", "Status is required").not().isEmpty(),
-      check("skills", "Skills is required").not().isEmpty(),
+      check('status', 'Status is required').not().isEmpty(),
+      check('skills', 'Skills is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -77,7 +77,7 @@ router.post(
     if (skills) {
       // convert comma seperated string to an array
       // also map each value and trim it of spaces
-      profileFields.skills = skills.split(",").map((skill) => skill.trim());
+      profileFields.skills = skills.split(',').map((skill) => skill.trim());
     }
 
     // 3b. Build social object
@@ -114,24 +114,44 @@ router.post(
       res.json(profile);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server Error");
+      res.status(500).send('Server Error');
     }
 
-    res.send("Hello");
+    res.send('Hello');
   }
 );
 
 // @route		GET api/profile
 // @desc		Get all profiles
 // @access	Public
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const profiles = await Profile.find().populate("user", ["name", "avatar"]);
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
     res.json(profiles);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
+
+// @route		DELETE api/profile
+// @desc		Delete profile, user & posts
+// @access	Private
+router.delete('/', auth, async (req, res) => {
+  try {
+    // TODO: - remove users posts
+
+    // Remove profile
+    await Profile.findOneAndRemove({ user: req.user.id });
+    // Remove user
+    await User.findOneAndRemove({ user: req.user.id });
+
+    res.json({ msg: 'User deleted.'});
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 
 module.exports = router;
