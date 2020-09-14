@@ -8,6 +8,7 @@ const { check, validationResult } = require('express-validator/check');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
+// =============================================================
 // ** profile **
 // =============================================================
 // @route   GET api/profile/me
@@ -157,7 +158,8 @@ router.delete('/', auth, async (req, res) => {
   }
 });
 
-// ** api/profile/experience **
+// =============================================================
+// ** experience **
 // =============================================================
 // @route		PUT api/profile/experience
 // @desc		Add profile experience
@@ -237,7 +239,8 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
   }
 });
 
-// ** api/profile/education **
+// =============================================================
+// ** education **
 // =============================================================
 // @route		PUT api/profile/education
 // @desc		Add profile education
@@ -318,6 +321,7 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
   }
 });
 
+// =============================================================
 // ** Github **
 // =============================================================
 // @route		GET api/profile/github/:username
